@@ -1,10 +1,11 @@
 <script setup>
 
+import SliderHome from "../components/SliderHome.vue";
 </script>
 
 <template>
   <div class="Home">
-    Home
+    <SliderHome/>
   </div>
 </template>
 
