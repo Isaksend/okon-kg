@@ -1,4 +1,5 @@
 <script setup>
+<<<<<<< HEAD
 import { ref } from 'vue'
 
 const form = ref({
@@ -44,10 +45,13 @@ const submitForm = () => {
 }
 
 
+=======
+>>>>>>> 53f45990927daef2c4fe7b5377025e51cddf8d11
 
 </script>
 
 <template>
+<<<<<<< HEAD
   <div>
     <div class="form-wrapper-desktop">
       <!-- Заголовок формы -->
@@ -114,10 +118,14 @@ const submitForm = () => {
         </div>
       </div>
   </div>
+=======
+
+>>>>>>> 53f45990927daef2c4fe7b5377025e51cddf8d11
 </template>
 
 <style scoped>
 
+<<<<<<< HEAD
 .form-wrapper-desktop {
   position: absolute;
   width: 100%;
@@ -267,4 +275,6 @@ a {
   color: #ffffff;
   text-decoration: underline;
 }
+=======
+>>>>>>> 53f45990927daef2c4fe7b5377025e51cddf8d11
 </style>
