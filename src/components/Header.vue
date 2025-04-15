@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import CallRequestDesktop from "./CallRequestDesktop.vue";
 import CallRequestMobile from "./CallRequestMobile.vue";
 
+const isOpen = ref(false)
 const isDesktop = ref(true)
 const isModalOpen = ref(false)
 
@@ -235,8 +236,9 @@ onMounted(() => {
     background-color: #fff;
     border-radius: 16px;
     max-width: 430px;
+    max-height: 700px;
+    height: 100%;
     width: 100%;
-    padding: 24px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   }
 

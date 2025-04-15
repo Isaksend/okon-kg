@@ -152,7 +152,6 @@ const validate = () => {
 const submitForm = () => {
   if (validate()) {
     alert('Форма отправлена ✅')
-    // тут можно отправить данные на сервер
   }
 }
 
