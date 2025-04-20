@@ -147,7 +147,7 @@ onBeforeUnmount(() => {
 }
 
 .content-section {
-  width: 50%;
+  width: 35%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -162,6 +162,7 @@ onBeforeUnmount(() => {
   font-weight: bold;
   margin-bottom: 0.5rem;
   color: #333;
+  text-align: center;
 }
 
 .subtitle {
@@ -172,6 +173,7 @@ onBeforeUnmount(() => {
   background-color: #2a9d8f;
   padding: 0.5rem 1rem;
   display: inline-block;
+  text-align: center;
 }
 
 .description {
@@ -201,7 +203,7 @@ onBeforeUnmount(() => {
   position: absolute;
   right: 0;
   top: 0;
-  width: 60%;
+  width: 65%;
   height: 100%;
   z-index: 1;
 }
@@ -279,11 +281,13 @@ onBeforeUnmount(() => {
   .slider-container {
     flex-direction: column;
     height: auto;
+    padding-bottom: 5rem;
   }
 
   .content-section {
-    width: 100%;
-    z-index: 2;
+    width: 90%;
+    max-width: 90%;
+    padding: 5%;
   }
 
   .image-section {
@@ -300,5 +304,31 @@ onBeforeUnmount(() => {
     align-items: center;
     width: 100%;
   }
+
+  .action-button{
+    margin: auto;
+  }
+  .description{
+    margin-bottom: 1rem;
+  }
+  .title{
+    font-size: 2rem;
+  }
 }
+
+@media (max-width: 620px) {
+  .slider-container{
+    width: 100%;
+  }
+}
+
+@media (max-width: 501px) {
+  .title{
+    font-size: 1.5rem;
+  }
+  .subtitle{
+    font-size: 1.25rem;
+  }
+}
+
 </style>

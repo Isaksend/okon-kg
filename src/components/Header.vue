@@ -3,10 +3,7 @@ import { ref, computed, onMounted } from 'vue'
 import CallRequestDesktop from "./CallRequestDesktop.vue";
 import CallRequestMobile from "./CallRequestMobile.vue";
 
-<<<<<<< HEAD
 const isOpen = ref(false)
-=======
->>>>>>> 53f45990927daef2c4fe7b5377025e51cddf8d11
 const isDesktop = ref(true)
 const isModalOpen = ref(false)
 
@@ -25,7 +22,7 @@ onMounted(() => {
       <div class="header-logo">
         <div class="logo">
           <picture>
-            <source media="(max-width: 461px)" srcset="/assets/logo/mobile_logo.jpg" />
+            <source media="(max-width: 501px)" srcset="/assets/logo/mobile_logo.jpg" />
             <img src="/assets/logo/logo.png" class="logo" alt="Okon.kg logo" />
           </picture>
           <div class="logo-name">
@@ -196,7 +193,6 @@ onMounted(() => {
   }
 
   .burger {
-    display: none;
     flex-direction: column;
     justify-content: space-between;
     width: 24px;
@@ -205,6 +201,7 @@ onMounted(() => {
     border: none;
     padding: 0;
     cursor: pointer;
+    z-index: 9999;
   }
 
   .burger span {
@@ -239,14 +236,10 @@ onMounted(() => {
     background-color: #fff;
     border-radius: 16px;
     max-width: 430px;
-<<<<<<< HEAD
     max-height: 700px;
     height: 100%;
     width: 100%;
-=======
-    width: 100%;
     padding: 24px;
->>>>>>> 53f45990927daef2c4fe7b5377025e51cddf8d11
     box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   }
 
@@ -330,6 +323,7 @@ onMounted(() => {
       height: 100%;
       background-color: #022279;
       transition: 300ms;
+      z-index: 998;
     }
 
     .nav {
@@ -355,8 +349,12 @@ onMounted(() => {
     .call-btn{
       display: none;
     }
+    .burger{
+      z-index: 999;
+    }
   }
-  @media (max-width: 461px) {
+
+  @media (max-width: 501px) {
     .header-component{
       padding: 30px 2.5% 75px;
     }
@@ -371,10 +369,9 @@ onMounted(() => {
       width: 128px;
       height: auto;
     }
-
     .header-address-block{
-      flex-wrap: wrap;
-    }
+       flex-wrap: wrap;
+     }
     .burger{
       position: absolute;
       right: 20px;
