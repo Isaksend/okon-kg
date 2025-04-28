@@ -24,10 +24,23 @@ import VideoGallery from "./VideoGallery.vue";
       <img class="large-logo" src="/assets/logo/LargeLogo.png" alt="Follow us on Logo" />
     </div>
     <VideoGallery/>
+    <div class="title-block">
+      <div class="title-name">
+        OKON.KG
+      </div>
+      <div class="title-text">
+        <span class="coloredBlue">Okon.kg</span> предоставляет полный спектр услуг по установке окон и аксессуаров, включая москитные сети и жалюзи. С момента нашего основания в 2019, мы стремимся обеспечить максимальный <span class="coloredBlue">комфорт и эстетику</span>  в каждый дом и офис. Наша команда профессионалов гарантирует <span class="coloredBlue">качество и надежность </span> каждому клиенту.
+      </div>
+      <div class="title-sign-text">
+        Нам доверяют тысячи кыргызстанцев!
+      </div>
+    </div>
+
   </div>
 </template>
 
 <style scoped>
+
 .company-soc-links{
   display: flex;
   justify-content: center;
@@ -57,4 +70,63 @@ import VideoGallery from "./VideoGallery.vue";
   display: flex;
   justify-content: center;
 }
+
+
+.title-block{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  max-width: 800px;
+  margin: 3rem auto;
+}
+
+.title-name{
+  font-size: 3rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.title-text{
+  font-size: 2rem;
+  font-weight: 500;
+  margin-top: 2rem;
+}
+
+.coloredBlue{
+  color: #0081DF;
+}
+
+.title-sign-text{
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-top: 2rem;
+}
+
+@media screen and (max-width: 801px) {
+  .title-block{
+    max-width: 600px;
+    margin: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 501px) {
+  .title-block{
+    max-width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .title-text{
+    font-size: 1rem;
+    font-weight: 500;
+  }
+  .title-name{
+    font-size: 2rem;
+  }
+}
+
 </style>
