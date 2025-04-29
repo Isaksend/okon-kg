@@ -11,12 +11,20 @@ const routes = [
     { path: '/services', component: ServicesPage },
     { path: '/accessories', component: AccessoriesPage },
     { path: '/projects', component: OurProjectsPage },
-    { path: '/contact', component: ContactPage }
+    { path: '/contact', component: ContactPage },
+    {
+        path: '/services/:id/:slug',
+        name: 'ServiceInfo',
+        component: () => import('../views/ServiceInfo.vue')
+    },
 ]
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
+    scrollBehavior() {
+        return { top: 0 }
+    }
 })
 
 export default router

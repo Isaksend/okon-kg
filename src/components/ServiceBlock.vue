@@ -1,4 +1,37 @@
 <script setup>
+import ServiceCard from './ServiceCard.vue';
+
+// Service data with extended information
+const services = [
+  {
+    id: 1,
+    title: 'Москитные сетки (внутрении)',
+    image: '/assets/background/service_item_1.png',
+    slug: 'moskitnye-setki-vnutrennii',
+    description: 'Качественные внутренние москитные сетки для защиты от насекомых. Простая установка, долговечность и надежность.'
+  },
+  {
+    id: 2,
+    title: 'Раздвижные москитные сетки плиссе',
+    image: '/assets/background/service_item_2.png',
+    slug: 'moskitnye-setki-plisse',
+    description: 'Современные раздвижные москитные сетки плиссе. Идеальное решение для балконов и террас.'
+  },
+  {
+    id: 3,
+    title: 'Устранение продувания',
+    image: '/assets/background/service_item_3.png',
+    slug: 'ustranenie-produvaniya',
+    description: 'Профессиональное устранение продувания окон. Утепление и герметизация для комфортного микроклимата.'
+  },
+  {
+    id: 4,
+    title: 'Замена стеклопакета',
+    image: '/assets/background/service_item_4.png',
+    slug: 'zamena-steklopaketa',
+    description: 'Быстрая и профессиональная замена стеклопакетов. Используем качественные материалы с гарантией.'
+  }
+];
 </script>
 
 <template>
@@ -15,67 +48,16 @@
         </svg>
       </div>
     </div>
-
     <div class="service-contain">
-      <!-- Service item 1 -->
-      <div class="service-item" style="background-image: url('/assets/background/service_item_1.png');">
-        <div class="service-item-overlay">
-          <div class="service-item-text">
-            Москитные сетки (внутрении)
-          </div>
-          <div class="service-link-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Service item 2 -->
-      <div class="service-item" style="background-image: url('/assets/background/service_item_2.png');">
-        <div class="service-item-overlay">
-          <div class="service-item-text">
-            Раздвижные москитные сетки плиссе
-          </div>
-          <div class="service-link-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Service item 3 -->
-      <div class="service-item" style="background-image: url('/assets/background/service_item_3.png');">
-        <div class="service-item-overlay">
-          <div class="service-item-text">
-            Устранение продувания
-          </div>
-          <div class="service-link-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Service item 4 -->
-      <div class="service-item" style="background-image: url('/assets/background/service_item_4.png');">
-        <div class="service-item-overlay">
-          <div class="service-item-text">
-            Замена стеклопакета
-          </div>
-          <div class="service-link-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </div>
-        </div>
-      </div>
+      <ServiceCard
+            v-for="service in services"
+            :key="service.id"
+            :backgroundImage="service.image"
+            :title="service.title"
+            :serviceId="service.id"
+            :serviceSlug="service.slug"
+            :serviceDescription="service.description"
+        />
     </div>
   </div>
 </template>

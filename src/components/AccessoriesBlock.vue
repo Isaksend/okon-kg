@@ -98,7 +98,7 @@ onBeforeUnmount(() => {
                 <img :src="accessory.image" :alt="accessory.title">
               </div>
               <div class="accessory-title">
-                <a href="#">{{ accessory.title }}</a>
+                <div>{{ accessory.title }}</div>
               </div>
             </div>
           </transition-group>
