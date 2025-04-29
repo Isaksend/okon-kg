@@ -6,6 +6,8 @@ import ServiceBlock from "../components/ServiceBlock.vue";
 import RepairBlock from "../components/RepairBlock.vue";
 import AccessoriesBlock from "../components/AccessoriesBlock.vue";
 import TopServiceList from "../components/TopServiceList.vue";
+import OurWorks from "../components/OurWorks.vue";
+import ReviewsBlock from "../components/ReviewsBlock.vue";
 </script>
 
 <template>
@@ -16,6 +18,8 @@ import TopServiceList from "../components/TopServiceList.vue";
     <RepairBlock />
     <AccessoriesBlock/>
     <TopServiceList/>
+    <OurWorks/>
+    <ReviewsBlock/>
   </div>
 </template>
 

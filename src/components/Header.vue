@@ -75,10 +75,10 @@ onMounted(() => {
     <div :class="['header-nav', { open: isOpen }]">
       <nav :class="['nav', { open: isOpen }]">
         <router-link to="/" class="link" active-class="active"  @click="isOpen = false">О компании</router-link>
-        <router-link to="/about" class="link" active-class="active"  @click="isOpen = false">Услуги</router-link>
-        <router-link to="/about" class="link" active-class="active"  @click="isOpen = false">Аксессуары</router-link>
-        <router-link to="/about" class="link" active-class="active"  @click="isOpen = false">Работы</router-link>
-        <router-link to="/about" class="link" active-class="active"  @click="isOpen = false">Контакты</router-link>
+        <router-link to="/services" class="link" active-class="active"  @click="isOpen = false">Услуги</router-link>
+        <router-link to="/accessories" class="link" active-class="active"  @click="isOpen = false">Аксессуары</router-link>
+        <router-link to="/projects" class="link" active-class="active"  @click="isOpen = false">Работы</router-link>
+        <router-link to="/contact" class="link" active-class="active"  @click="isOpen = false">Контакты</router-link>
       </nav>
     </div>
     <div class="forms-block">

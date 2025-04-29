@@ -158,7 +158,7 @@ onBeforeUnmount(() => {
 
 /* Mobile Styles */
 .top-services-mobile {
-  text-align: center;
+  text-align: left;
 }
 
 .view-button {

@@ -3,9 +3,7 @@
 </script>
 
 <template>
-  <div class="about">
-    About us
-  </div>
+  Accessories Page
 </template>
 
 <style scoped>
