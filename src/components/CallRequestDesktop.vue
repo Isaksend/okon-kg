@@ -1,6 +1,5 @@
 <script setup>
-
-import { ref } from 'vue'
+import {ref, onMounted} from 'vue'
 
 const form = ref({
   name: '',
@@ -15,9 +14,34 @@ const errors = ref({
   city: '',
 })
 
+const isSubmitting = ref(false)
+const formStatus = ref(null)
+
+// UTM параметры
+const utmParams = ref({})
+
+// Получение UTM параметров из URL
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const params = {}
+
+  for (const [key, value] of urlParams.entries()) {
+    if (key.startsWith('utm_')) {
+      params[key] = value
+    }
+  }
+
+  // Также сохраняем реферер
+  if (document.referrer) {
+    params.referrer = document.referrer
+  }
+
+  utmParams.value = params
+})
+
 const validate = () => {
   let valid = true
-  errors.value = { name: '', phone: '', city: '' }
+  errors.value = {name: '', phone: '', city: ''}
 
   if (!form.value.name.trim()) {
     errors.value.name = 'Укажите имя'
@@ -38,15 +62,79 @@ const validate = () => {
   return valid
 }
 
-const submitForm = () => {
-  if (validate()) {
-    alert('Форма отправлена ✅')
+const submitForm = async () => {
+  if (!validate()) return
+
+  isSubmitting.value = true
+  formStatus.value = null
+
+  try {
+    // Подготовка данных для отправки
+    const leadData = {
+      name: form.value.name,
+      phone: form.value.phone.replace(/\s/g, ''), // Убираем пробелы из номера
+      city: form.value.city,
+      comment: form.value.comment || '',
+      source: 'website',
+      form_type: 'desktop',
+      created_at: new Date().toISOString(),
+      utm: utmParams.value
+    }
+
+    // Отправка данных на сервер
+    const response = await fetch('/api/amocrm/lead', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(leadData)
+    })
+
+    const result = await response.json()
+
+    if (result.success) {
+      // Успешная отправка
+      formStatus.value = {
+        type: 'success',
+        message: 'Ваша заявка принята! Мы свяжемся с вами в ближайшее время.'
+      }
+
+      // Очистка формы
+      form.value = {
+        name: '',
+        phone: '',
+        city: '',
+        comment: ''
+      }
+
+      // Отслеживание конверсии (если настроена аналитика)
+      if (window.gtag) {
+        window.gtag('event', 'form_submission', {
+          'event_category': 'forms',
+          'event_label': 'callback_form'
+        })
+      }
+
+      if (window.ym) {
+        window.ym(XXXXXX, 'reachGoal', 'form_submission')
+      }
+    } else {
+      throw new Error(result.message || 'Ошибка при отправке формы')
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке формы:', error)
+
+    formStatus.value = {
+      type: 'error',
+      message: 'Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.'
+    }
+  } finally {
+    isSubmitting.value = false
   }
 }
 </script>
 
 <template>
-
   <div>
     <div class="form-wrapper-desktop">
       <!-- Заголовок формы -->
@@ -57,67 +145,83 @@ const submitForm = () => {
         <button class="close-btn" @click="$emit('close')">✕</button>
       </div>
 
+      <!-- Контент формы -->
+      <div class="form-content">
+        <p class="subtitle">У Вас Есть Проблема? Давайте Решим Их</p>
 
-        <!-- Контент формы -->
-        <div class="form-content">
-          <p class="subtitle">У Вас Есть Проблема? Давайте Решим Их</p>
-          <input
-              v-mask="'+996 ### ### ###'"
-              v-model="form.phone"
-              placeholder="+996 ___ ___ ___"
-          />
-          <span class="error">{{ errors.phone }}</span>
-          <input
-              type="text"
-              v-model="form.name"
-              placeholder="Как вас зовут?"
-          />
-          <span class="error">{{ errors.name }}</span>
+        <input
+            v-mask="'+996 ### ### ###'"
+            v-model="form.phone"
+            placeholder="+996 ___ ___ ___"
+            :disabled="isSubmitting"
+        />
+        <span class="error">{{ errors.phone }}</span>
 
-          <input
-              type="text"
-              v-model="form.city"
-              placeholder="Ваш город"
-          />
-          <span class="error">{{ errors.city }}</span>
+        <input
+            type="text"
+            v-model="form.name"
+            placeholder="Как вас зовут?"
+            :disabled="isSubmitting"
+        />
+        <span class="error">{{ errors.name }}</span>
 
-          <label for="commentary" class="commentary-label">
-            Комментарий
-          </label>
-          <textarea
-              id="commentary"
+        <input
+            type="text"
+            v-model="form.city"
+            placeholder="Ваш город"
+            :disabled="isSubmitting"
+        />
+        <span class="error">{{ errors.city }}</span>
+
+        <label for="commentary" class="commentary-label">
+          Комментарий
+        </label>
+        <textarea
+            id="commentary"
             v-model="form.comment"
             placeholder="Например: Хочу заказать антимоскитную сетку"
-          />
-          <div class="center-btn">
-            <button class="submit-btn" @click="submitForm">Отправить</button>
-          </div>
-          <div class="number-content">
-            <div class="number-content-item">
-              <div class="number-city">
-                Бишкек
-              </div>
-              <p class="phone">+996 702 299 777</p>
+            :disabled="isSubmitting"
+        />
+
+        <!-- Сообщение о статусе отправки формы -->
+        <div v-if="formStatus" :class="['status-message', formStatus.type]">
+          {{ formStatus.message }}
+        </div>
+
+        <div class="center-btn">
+          <button
+              class="submit-btn"
+              @click="submitForm"
+              :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? 'Отправка...' : 'Отправить' }}
+          </button>
+        </div>
+
+        <div class="number-content">
+          <div class="number-content-item">
+            <div class="number-city">
+              Бишкек
             </div>
-            <div class="number-content-item">
-              <div class="number-city">
-                Ош
-              </div>
-              <p class="phone">+996 500 076 200</p>
-            </div>
+            <a href="tel:+996500074222" class="phone">+996 500 074 222</a>
           </div>
-          <div class="socials">
-            <a href="#">Whatsapp</a>
-            <a href="#">Instagram</a>
+          <div class="number-content-item">
+            <div class="number-city">
+              Ош
+            </div>
+            <a href="tel:+996500076200" class="phone">+996 500 076 200</a>
           </div>
         </div>
+        <div class="socials">
+          <a href="#">Whatsapp</a>
+          <a href="#">Instagram</a>
+        </div>
       </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
-
-
 .form-wrapper-desktop {
   position: absolute;
   width: 100%;
@@ -136,7 +240,7 @@ const submitForm = () => {
   padding: 30px;
 }
 
-.form-header-block{
+.form-header-block {
   position: relative;
   width: 100%;
 }
@@ -151,6 +255,7 @@ const submitForm = () => {
   font-weight: bold;
   cursor: pointer;
   z-index: 9999;
+  color: white;
 }
 
 .error {
@@ -161,7 +266,7 @@ const submitForm = () => {
   margin-left: 25px;
 }
 
-.commentary-label{
+.commentary-label {
   margin-left: 20px;
 }
 
@@ -177,6 +282,7 @@ const submitForm = () => {
 .form-header svg {
   margin-bottom: 5px;
 }
+
 .form-header span {
   display: block;
   font-size: 1.1rem;
@@ -234,11 +340,17 @@ label {
   font-size: 1rem;
   transition: background 0.2s ease;
 }
+
 .submit-btn:hover {
   background-color: #3e9689;
 }
 
-.number-content{
+.submit-btn:disabled {
+  background-color: #9fcec8;
+  cursor: not-allowed;
+}
+
+.number-content {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -248,7 +360,8 @@ label {
 .phone {
   text-align: center;
   font-weight: bold;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
   font-size: 1rem;
 }
 
@@ -259,7 +372,7 @@ label {
   margin-top: 0.3rem;
 }
 
-.socials a{
+.socials a {
   font-weight: 500;
 }
 
@@ -268,4 +381,25 @@ a {
   text-decoration: underline;
 }
 
+/* Добавляем стили для сообщения о статусе */
+.status-message {
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-size: 0.9rem;
+  max-width: 360px;
+  width: 100%;
+  margin: 5px auto;
+}
+
+.status-message.success {
+  background-color: rgba(75, 168, 154, 0.2);
+  border: 1px solid #4ba89a;
+}
+
+.status-message.error {
+  background-color: rgba(255, 100, 100, 0.2);
+  border: 1px solid #ff6464;
+}
 </style>

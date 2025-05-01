@@ -53,8 +53,8 @@ onMounted(() => {
           </div>
         </div>
         <div class="number-block">
-          <a href="tel:+996702299777" class="number-item">
-            +996 702 299 777
+          <a href="tel:+996500074222" class="number-item">
+            +996 500 074 222
           </a>
           <a href="tel:+996500076200"  class="number-item">
             +996 500 076 200
@@ -202,6 +202,7 @@ onMounted(() => {
     padding: 0;
     cursor: pointer;
     z-index: 9999;
+    display: none;
   }
 
   .burger span {
@@ -233,14 +234,11 @@ onMounted(() => {
   }
 
   .modal-form {
-    background-color: #fff;
     border-radius: 16px;
     max-width: 430px;
     max-height: 700px;
     height: 100%;
     width: 100%;
-    padding: 24px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   }
 
 

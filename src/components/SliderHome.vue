@@ -12,28 +12,35 @@ const slides = ref([
     subtitle: 'В КЫРГЫЗСТАНЕ',
     description: 'Мы предлагаем профессиональный ремонт оконных конструкций любого типа с предоставлением официальной гарантии на выполненные работы!',
     buttonText: 'Заказать звонок',
-    image: '/assets/img/window-repair-1.png'
+    image: '/assets/img/window_repair_1.png'
   },
   {
     title: 'КАЧЕСТВЕННЫЕ МАТЕРИАЛЫ',
     subtitle: 'ГАРАНТИЯ КАЧЕСТВА',
     description: 'Используем только проверенные материалы и комплектующие для ремонта окон с гарантией долговечности!',
     buttonText: 'Узнать больше',
-    image: '/assets/img/window-repair-1.png'
+    image: '/assets/img/window_repair_2.png'
   },
   {
     title: 'ОПЫТНЫЕ МАСТЕРА',
     subtitle: 'ПРОФЕССИОНАЛЬНЫЙ ПОДХОД',
     description: 'Наши специалисты имеют многолетний опыт в сфере ремонта и обслуживания оконных систем!',
     buttonText: 'Вызвать мастера',
-    image: '/assets/img/window-repair-1.png'
+    image: '/assets/img/window_repair_3.png'
   },
   {
     title: 'ДОСТУПНЫЕ ЦЕНЫ',
     subtitle: 'ВЫГОДНЫЕ УСЛОВИЯ',
     description: 'Предлагаем конкурентные цены на все виды работ по ремонту окон с возможностью индивидуальных скидок!',
     buttonText: 'Узнать стоимость',
-    image: '/assets/img/window-repair-1.png'
+    image: '/assets/img/window_repair_4.png'
+  },
+  {
+    title: 'РЕМОНТ ОКОН',
+    subtitle: 'В КЫРГЫЗСТАНЕ',
+    description: 'Мы предлагаем профессиональный ремонт оконных конструкций любого типа с предоставлением официальной гарантии на выполненные работы!',
+    buttonText: 'Заказать звонок',
+    image: '/assets/img/window_repair_5.png'
   }
 ]);
 

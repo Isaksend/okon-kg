@@ -158,8 +158,7 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .projects-page {
-  max-width: 1200px;
-  margin: 0 auto;
+
 }
 
 .gallery-title {
@@ -172,6 +171,8 @@ onBeforeUnmount(() => {
 
 .projects-content {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .projects-gallery {

@@ -95,12 +95,6 @@ onBeforeUnmount(() => {
             <img :src="social.icon" :alt="social.name" class="social-icon">
           </a>
         </div>
-
-        <div class="call-btn">
-          <router-link to="/contacts" class="btn-link">
-            Позвоните мне
-          </router-link>
-        </div>
       </div>
     </div>
 
@@ -210,7 +204,7 @@ onBeforeUnmount(() => {
 /* Social media section */
 .social-links {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 }
 
 .social-link {
@@ -234,18 +228,6 @@ onBeforeUnmount(() => {
   height: 30px;
 }
 
-.btn-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px 30px;
-  background-color: #378D93;
-  color: #E0F1F2;
-  text-decoration: none;
-  font-size: 16px;
-  transition: 300ms;
-  border-radius: 4px;
-}
 .footer-links{
   display: flex;
   gap: 20px;
@@ -253,9 +235,6 @@ onBeforeUnmount(() => {
 
 .policy-link{
   color: #E0F1F2;
-}
-.btn-link:hover {
-  background-color: rgba(121, 241, 225, 0.87);
 }
 
 /* Media queries */
@@ -325,11 +304,6 @@ onBeforeUnmount(() => {
 
   .social-links {
     justify-content: center;
-  }
-
-  .btn-link {
-    padding: 12px 25px;
-    font-size: 14px;
   }
 }
 

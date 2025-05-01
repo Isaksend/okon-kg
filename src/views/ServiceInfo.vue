@@ -2,6 +2,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import CallRequestDesktop from "../components/CallRequestDesktop.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -112,18 +113,6 @@ onMounted(async () => {
       </ul>
     </div>
 
-    <!-- Pricing -->
-    <div class="service-pricing">
-      <h2>Стоимость</h2>
-      <div class="pricing-cards">
-        <div class="pricing-card" v-for="(price, level) in serviceDetails.pricing" :key="level">
-          <h3>{{ level === 'basic' ? 'Базовый' : level === 'standard' ? 'Стандарт' : 'Премиум' }}</h3>
-          <div class="price">{{ price }}</div>
-          <button class="order-button">Заказать</button>
-        </div>
-      </div>
-    </div>
-
     <!-- Gallery -->
     <div class="service-gallery" v-if="serviceDetails.gallery.length > 0">
       <h2>Галерея</h2>
@@ -137,21 +126,7 @@ onMounted(async () => {
     <!-- Contact Form -->
     <div class="service-contact">
       <h2>Заказать консультацию</h2>
-      <form class="contact-form">
-        <div class="form-group">
-          <label for="name">Ваше имя</label>
-          <input type="text" id="name" placeholder="Введите ваше имя">
-        </div>
-        <div class="form-group">
-          <label for="phone">Телефон</label>
-          <input type="tel" id="phone" placeholder="+7 (___) ___-__-__">
-        </div>
-        <div class="form-group">
-          <label for="message">Сообщение</label>
-          <textarea id="message" rows="4" placeholder="Ваш вопрос или комментарий"></textarea>
-        </div>
-        <button type="submit" class="submit-button">Отправить</button>
-      </form>
+
     </div>
   </div>
 </template>

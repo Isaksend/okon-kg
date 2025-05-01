@@ -35,12 +35,14 @@
               v-mask="'+996 ### ### ###'"
               v-model="form.phone"
               placeholder="+996 ___ ___ ___"
+              :disabled="isSubmitting"
           />
           <span class="error">{{ errors.phone }}</span>
           <input
               type="text"
               v-model="form.name"
               placeholder="Как вас зовут?"
+              :disabled="isSubmitting"
           />
           <span class="error">{{ errors.name }}</span>
 
@@ -48,6 +50,7 @@
               type="text"
               v-model="form.city"
               placeholder="Ваш город"
+              :disabled="isSubmitting"
           />
           <span class="error">{{ errors.city }}</span>
 
@@ -56,10 +59,23 @@
             <textarea
                 v-model="form.comment"
                 placeholder="Например: Хочу заказать антимоскитную сетку"
+                :disabled="isSubmitting"
             />
           </label>
+
+          <!-- Сообщение о результате отправки -->
+          <div v-if="formStatus" :class="['status-message', formStatus.type]">
+            {{ formStatus.message }}
+          </div>
+
           <div class="center-btn">
-            <button class="submit-btn" @click="submitForm">Отправить</button>
+            <button
+                class="submit-btn"
+                @click="submitForm"
+                :disabled="isSubmitting"
+            >
+              {{ isSubmitting ? 'Отправка...' : 'Отправить' }}
+            </button>
           </div>
           <div class="number-content">
             <div class="number-content-item">
@@ -111,8 +127,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 
+// Данные формы
 const form = ref({
   name: '',
   phone: '',
@@ -120,12 +137,40 @@ const form = ref({
   comment: '',
 })
 
+// Ошибки валидации
 const errors = ref({
   name: '',
   phone: '',
   city: '',
 })
 
+// Статус формы
+const isSubmitting = ref(false)
+const formStatus = ref(null)
+
+// UTM параметры
+const utmParams = ref({})
+
+// Получение UTM параметров из URL
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const params = {}
+
+  for (const [key, value] of urlParams.entries()) {
+    if (key.startsWith('utm_')) {
+      params[key] = value
+    }
+  }
+
+  // Также сохраняем реферер
+  if (document.referrer) {
+    params.referrer = document.referrer
+  }
+
+  utmParams.value = params
+})
+
+// Валидация формы
 const validate = () => {
   let valid = true
   errors.value = { name: '', phone: '', city: '' }
@@ -149,20 +194,87 @@ const validate = () => {
   return valid
 }
 
-const submitForm = () => {
-  if (validate()) {
-    alert('Форма отправлена ✅')
+// Отправка формы с интеграцией amoCRM
+const submitForm = async () => {
+  if (!validate()) return
+
+  isSubmitting.value = true
+  formStatus.value = null
+
+  try {
+    // Подготовка данных для отправки
+    const leadData = {
+      name: form.value.name,
+      phone: form.value.phone.replace(/\s/g, ''), // Убираем пробелы из номера
+      city: form.value.city,
+      comment: form.value.comment || '',
+      source: 'website',
+      form_type: 'mobile', // Указываем, что это мобильная форма
+      created_at: new Date().toISOString(),
+      utm: utmParams.value
+    }
+
+    // Отправка данных на сервер
+    const response = await fetch('/api/amocrm/lead', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(leadData)
+    })
+
+    const result = await response.json()
+
+    if (result.success) {
+      // Успешная отправка
+      formStatus.value = {
+        type: 'success',
+        message: 'Ваша заявка принята! Мы свяжемся с вами в ближайшее время.'
+      }
+
+      // Очистка формы
+      form.value = {
+        name: '',
+        phone: '',
+        city: '',
+        comment: ''
+      }
+
+      // Отслеживание конверсии (если настроена аналитика)
+      if (window.gtag) {
+        window.gtag('event', 'form_submission', {
+          'event_category': 'forms',
+          'event_label': 'mobile_callback_form'
+        })
+      }
+
+      // Закрываем форму через 3 секунды после успешной отправки
+      setTimeout(() => {
+        isOpen.value = false
+        formStatus.value = null
+      }, 3000)
+    } else {
+      throw new Error(result.message || 'Ошибка при отправке формы')
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке формы:', error)
+
+    formStatus.value = {
+      type: 'error',
+      message: 'Произошла ошибка при отправке заявки. Пожалуйста, попробуйте позже или свяжитесь с нами по телефону.'
+    }
+  } finally {
+    isSubmitting.value = false
   }
 }
 
-
-
-
+// Управление открытием/закрытием формы
 const isOpen = ref(false)
 const toggleForm = () => {
   isOpen.value = !isOpen.value
 }
 
+// Обработка свайпа
 let touchStartY = 0
 const startTouch = (e) => {
   touchStartY = e.changedTouches[0].clientY
@@ -212,7 +324,6 @@ const endTouch = (e) => {
   margin-top: -6px;
   margin-bottom: 8px;
 }
-
 
 .slide-up-enter-active,
 .slide-up-leave-active {
@@ -321,6 +432,11 @@ label {
   background-color: #3e9689;
 }
 
+.submit-btn:disabled {
+  background-color: #9fcec8;
+  cursor: not-allowed;
+}
+
 .number-content{
   display: flex;
   flex-direction: row;
@@ -349,6 +465,25 @@ label {
 a {
   color: #ffffff;
   text-decoration: underline;
+}
+
+/* Добавляем стили для сообщения о статусе */
+.status-message {
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+.status-message.success {
+  background-color: rgba(75, 168, 154, 0.2);
+  border: 1px solid #4ba89a;
+}
+
+.status-message.error {
+  background-color: rgba(255, 100, 100, 0.2);
+  border: 1px solid #ff6464;
 }
 
 @media (min-width: 960px) {
