@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
         <h1 class="title">{{ slides[currentIndex].title }}</h1>
         <div class="subtitle">{{ slides[currentIndex].subtitle }}</div>
         <p class="description">{{ slides[currentIndex].description }}</p>
-        <button class="action-button">{{ slides[currentIndex].buttonText }}</button>
+        <router-link to="/contact" class="action-button">{{ slides[currentIndex].buttonText }}</router-link>
       </div>
 
       <!-- Right image section -->
