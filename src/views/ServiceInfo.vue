@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import CallRequestDesktop from "../components/CallRequestDesktop.vue";
+import { servicesData } from '../data/servicesData';
 
 const route = useRoute();
 const router = useRouter();
@@ -14,7 +14,7 @@ const serviceTitle = ref(route.query.title || '');
 const serviceDescription = ref(route.query.description || '');
 const serviceImage = ref(route.query.image || '');
 
-// Additional service information that could be fetched from an API
+// Additional service information
 const serviceDetails = ref({
   features: [],
   benefits: [],
@@ -22,47 +22,54 @@ const serviceDetails = ref({
   gallery: []
 });
 
+// Form data
+const contactForm = ref({
+  name: '',
+  phone: '',
+  message: ''
+});
+
+// Form state
+const formSubmitted = ref(false);
+const formSubmitting = ref(false);
+
 // Method to go back
 const goBack = () => {
   router.back();
 };
 
-// Could fetch more details based on ID
+// Submit form
+const submitForm = async () => {
+  formSubmitting.value = true;
+
+  // Simulate API call
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  formSubmitted.value = true;
+  formSubmitting.value = false;
+  contactForm.value = { name: '', phone: '', message: '' };
+};
+
+// Load service data
 onMounted(async () => {
   try {
-    // This would be an API call in a real application
-    // const response = await fetch(`/api/services/${serviceId.value}`);
-    // const data = await response.json();
-    // serviceDetails.value = data;
+    // Find the service in our data
+    const service = servicesData.find(s => s.id == serviceId.value);
+
+    if (service) {
+      // Update data from our dataset
+      serviceTitle.value = service.title;
+      serviceDescription.value = service.description;
+      serviceImage.value = service.image;
+      serviceDetails.value = {
+        features: service.features || [],
+        benefits: service.benefits || [],
+        pricing: service.pricing || {},
+        gallery: service.gallery || []
+      };
+    }
 
     console.log('Service Info loaded for ID:', serviceId.value);
-
-    // For demonstration, we'll simulate some data
-    serviceDetails.value = {
-      features: [
-        'Высокое качество материалов',
-        'Профессиональная установка',
-        'Гарантия на все работы',
-        'Быстрое обслуживание'
-      ],
-      benefits: [
-        'Долговечность',
-        'Надежность',
-        'Эстетичный внешний вид',
-        'Функциональность'
-      ],
-      pricing: {
-        basic: '5000 ₽',
-        standard: '7500 ₽',
-        premium: '10000 ₽'
-      },
-      gallery: [
-        '/assets/gallery/service1_1.jpg',
-        '/assets/gallery/service1_2.jpg',
-        '/assets/gallery/service1_3.jpg'
-      ]
-    };
-
   } catch (error) {
     console.error('Error fetching service details:', error);
   }
@@ -114,7 +121,7 @@ onMounted(async () => {
     </div>
 
     <!-- Gallery -->
-    <div class="service-gallery" v-if="serviceDetails.gallery.length > 0">
+    <div class="service-gallery" v-if="serviceDetails.gallery && serviceDetails.gallery.length > 0">
       <h2>Галерея</h2>
       <div class="gallery-grid">
         <div v-for="(image, index) in serviceDetails.gallery" :key="index" class="gallery-item">
@@ -123,11 +130,6 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- Contact Form -->
-    <div class="service-contact">
-      <h2>Заказать консультацию</h2>
-
-    </div>
   </div>
 </template>
 
@@ -147,6 +149,7 @@ onMounted(async () => {
   font-weight: 500;
   color: #333;
   width: fit-content;
+  transition: color 0.3s ease;
 }
 
 .back-button:hover {
@@ -160,6 +163,7 @@ onMounted(async () => {
   border-radius: 15px;
   position: relative;
   margin-bottom: 2rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .service-hero-overlay {
@@ -179,6 +183,7 @@ onMounted(async () => {
   color: white;
   font-size: 2.5rem;
   font-weight: 600;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .service-description,
@@ -195,6 +200,19 @@ h2 {
   font-weight: 600;
   margin-bottom: 1.5rem;
   color: #333;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background-color: #0056b3;
+  border-radius: 3px;
 }
 
 p {
@@ -209,11 +227,16 @@ ul {
 }
 
 ul li {
-  padding: 0.5rem 0;
+  padding: 0.7rem 0;
   display: flex;
   align-items: center;
   font-size: 1.1rem;
   color: #555;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+ul li:last-child {
+  border-bottom: none;
 }
 
 ul li:before {
@@ -221,6 +244,8 @@ ul li:before {
   color: #0056b3;
   font-weight: bold;
   margin-right: 1rem;
+  min-width: 20px;
+  text-align: center;
 }
 
 .pricing-cards {
@@ -236,11 +261,12 @@ ul li:before {
   text-align: center;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: white;
 }
 
 .pricing-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .pricing-card h3 {
@@ -265,6 +291,7 @@ ul li:before {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s;
+  width: 100%;
 }
 
 .order-button:hover {
@@ -281,6 +308,7 @@ ul li:before {
   height: 200px;
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-item img {
@@ -298,6 +326,7 @@ ul li:before {
   background-color: #f9f9f9;
   padding: 2rem;
   border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
 }
 
 .form-group {
@@ -318,6 +347,14 @@ ul li:before {
   border: 1px solid #ddd;
   border-radius: 5px;
   font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0056b3;
+  box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
 }
 
 .submit-button {
@@ -330,15 +367,68 @@ ul li:before {
   cursor: pointer;
   transition: background-color 0.3s;
   width: 100%;
+  font-weight: 500;
 }
 
 .submit-button:hover {
   background-color: #003d82;
 }
 
+.submit-button:disabled {
+  background-color: #99a7b5;
+  cursor: not-allowed;
+}
+
+/* Form Success */
+.form-success {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 30px;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+}
+
+.form-success h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #4CAF50;
+}
+
+.form-success p {
+  margin-bottom: 1.5rem;
+}
+
+.reset-form-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.reset-form-button:hover {
+  background-color: #3d8b40;
+}
+
 @media (max-width: 1200px) {
   .service-info-container {
-    padding: 2rem;
+    padding: 1.5rem;
   }
 }
 
@@ -365,6 +455,10 @@ ul li:before {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
+
+  h2 {
+    font-size: 1.5rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -374,6 +468,10 @@ ul li:before {
 
   .service-hero {
     height: 250px;
+  }
+
+  .service-info-container {
+    padding: 1rem;
   }
 }
 </style>

@@ -16,12 +16,6 @@
           <div class="repair-item-text">
             Ремонт пластиковых окон
           </div>
-          <div class="repair-link-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </div>
         </div>
       </div>
 
@@ -30,12 +24,6 @@
         <div class="repair-item-overlay">
           <div class="repair-item-text">
             Ремонт алюминиевых окон
-          </div>
-          <div class="repair-link-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
           </div>
         </div>
       </div>

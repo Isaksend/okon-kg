@@ -1,62 +1,49 @@
+<!-- ServicesPage.vue -->
 <script setup>
+import { ref, computed } from 'vue';
 import ServiceCard from '../components/ServiceCard.vue';
+import { servicesData, companyInfo } from '../data/servicesData';
 
-// Service data with extended information
-const services = [
-  {
-    id: 1,
-    title: 'Москитные сетки (внутрении)',
-    image: '/assets/background/service_item_1.png',
-    slug: 'moskitnye-setki-vnutrennii',
-    description: 'Качественные внутренние москитные сетки для защиты от насекомых. Простая установка, долговечность и надежность.'
-  },
-  {
-    id: 2,
-    title: 'Раздвижные москитные сетки плиссе',
-    image: '/assets/background/service_item_2.png',
-    slug: 'moskitnye-setki-plisse',
-    description: 'Современные раздвижные москитные сетки плиссе. Идеальное решение для балконов и террас.'
-  },
-  {
-    id: 3,
-    title: 'Устранение продувания',
-    image: '/assets/background/service_item_3.png',
-    slug: 'ustranenie-produvaniya',
-    description: 'Профессиональное устранение продувания окон. Утепление и герметизация для комфортного микроклимата.'
-  },
-  {
-    id: 4,
-    title: 'Замена стеклопакета',
-    image: '/assets/background/service_item_4.png',
-    slug: 'zamena-steklopaketa',
-    description: 'Быстрая и профессиональная замена стеклопакетов. Используем качественные материалы с гарантией.'
-  },{
-    id: 5,
-    title: 'Регулировка окон',
-    image: '/assets/background/service_item_5.png',
-    slug: 'zamena-steklopaketa',
-    description: 'Быстрая и профессиональная замена стеклопакетов. Используем качественные материалы с гарантией.'
-  },{
-    id: 6,
-    title: 'Утепление окон',
-    image: '/assets/background/service_item_6.png',
-    slug: 'zamena-steklopaketa',
-    description: 'Быстрая и профессиональная замена стеклопакетов. Используем качественные материалы с гарантией.'
-  },{
-    id: 7,
-    title: 'Ремонт фурнитуры',
-    image: '/assets/background/service_item_7.png',
-    slug: 'zamena-steklopaketa',
-    description: 'Быстрая и профессиональная замена стеклопакетов. Используем качественные материалы с гарантией.'
-  },{
-    id: 8,
-    title: 'Замена уплотнителя',
-    image: '/assets/background/service_item_8.png',
-    slug: 'zamena-steklopaketa',
-    description: 'Быстрая и профессиональная замена стеклопакетов. Используем качественные материалы с гарантией.'
-  },
+// State
+const searchQuery = ref('');
+const selectedCategory = ref('all');
 
-];
+// Categories from company info
+const categories = companyInfo.categories;
+
+// Computed properties
+const filteredServices = computed(() => {
+  let result = servicesData;
+
+  // Filter by category
+  if (selectedCategory.value !== 'all') {
+    result = result.filter(service => service.category === selectedCategory.value);
+  }
+
+  // Filter by search query
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim();
+    result = result.filter(service =>
+        service.title.toLowerCase().includes(query) ||
+        service.description.toLowerCase().includes(query)
+    );
+  }
+
+  return result;
+});
+
+// Methods
+const handleSearch = (e) => {
+  searchQuery.value = e.target.value;
+};
+
+const clearSearch = () => {
+  searchQuery.value = '';
+};
+
+const setCategory = (categoryId) => {
+  selectedCategory.value = categoryId;
+};
 </script>
 
 <template>
@@ -66,79 +53,174 @@ const services = [
         Наши услуги
       </div>
     </div>
+
+    <!-- Filters -->
+    <div class="service-filters">
+
+      <!-- Category tabs -->
+      <div class="category-tabs">
+        <button
+            v-for="category in categories"
+            :key="category.id"
+            :class="{ 'active': selectedCategory === category.id }"
+            @click="setCategory(category.id)"
+            class="category-tab"
+        >
+          {{ category.name }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Services Grid -->
     <div class="service-contain-block">
       <ServiceCard
-          v-for="service in services"
+          v-for="service in filteredServices"
           :key="service.id"
           :backgroundImage="service.image"
           :title="service.title"
           :serviceId="service.id"
           :serviceSlug="service.slug"
           :serviceDescription="service.description"
+          :priority="service.priority"
       />
+
+      <!-- No results message -->
+      <div v-if="filteredServices.length === 0" class="no-results">
+        <p>Услуги не найдены. Попробуйте изменить параметры поиска.</p>
+        <button @click="clearSearch" class="reset-button">Сбросить фильтры</button>
+      </div>
+    </div>
+
+    <!-- Company info section -->
+    <div class="company-info">
+      <h2>О компании</h2>
+      <p>{{ companyInfo.aboutText }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .services-page {
-    max-width: 1200px;
-    margin: 50px auto;
-  }
+.services-page {
+  max-width: 1200px;
+  margin: 50px auto;
+}
 
-  .service-header{
-    display: flex;
-    justify-content: center;
-    padding: 2rem 0;
-  }
-  .service-title{
-    display: flex;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #000000;
-  }
+.service-header{
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
 
+.service-title{
+  display: flex;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #000000;
+}
+
+/* Search and filters */
+.service-filters {
+  margin-bottom: 2rem;
+  padding: 0 15px;
+}
+
+
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: none;
+  cursor: pointer;
+}
+
+.category-tab.active {
+  background-color: #0056b3;
+  color: white;
+  border-color: #0056b3;
+}
+
+/* Services grid */
+.service-contain-block {
+  margin: auto 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* No results */
+.no-results {
+  grid-column: span 2;
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.reset-button {
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+/* Company info */
+.company-info {
+  margin-top: 3rem;
+  padding: 2rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+.company-info h2 {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.locations h3 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+}
+
+@media (max-width: 1441px) {
+  .services-page{
+    max-width: 1000px !important;
+    padding: 0;
+  }
+}
+
+@media (max-width: 1101px) {
+  .services-page{
+    max-width: 900px !important;
+  }
+}
+
+@media (max-width: 768px) {
   .service-contain-block {
-    margin: auto 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    grid-template-columns: 100%;
+    padding: 10px 5%;
   }
 
-  .service-link-btn svg{
-    rotate: -45deg;
-    width: 30px;
-    height: 30px;
+  .service-title{
+    font-size: 1.5rem;
   }
 
-  @media (max-width: 1441px) {
-    .services-page{
-      max-width: 1000px !important;
-      padding: 3rem 0;
-    }
+  .services-page {
+    padding: 0;
+    max-width: 100%;
   }
 
-  @media (max-width: 1101px) {
-    .services-page{
-      max-width: 900px !important;
-    }
+  .no-results {
+    grid-column: 1;
   }
-
-
-
-  @media (max-width: 768px) {
-    .service-contain-block {
-      grid-template-columns: 100%;
-      padding: 10px 5%;
-    }
-
-    .service-title{
-      font-size: 1.5rem;
-    }
-    .services-page {
-      padding: 0;
-      max-width: 100%;
-    }
-  }
+}
 </style>
