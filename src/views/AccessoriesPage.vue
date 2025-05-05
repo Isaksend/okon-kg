@@ -16,7 +16,7 @@
         <div class="benefits-grid">
           <div v-for="(benefit, index) in benefits" :key="index" class="benefit-item">
             <div class="benefit-icon">
-              <img :src="benefit.icon" :alt="benefit.title">
+              <img loading="lazy" :src="benefit.icon" :alt="benefit.title">
             </div>
             <div class="benefit-content">
               <h3>{{ benefit.title }}</h3>
@@ -38,9 +38,6 @@
               <p>{{ step.description }}</p>
             </div>
           </div>
-        </div>
-        <div class="cta-container">
-          <button class="cta-button" @click="contactSpecialist">Консультация специалиста</button>
         </div>
       </div>
     </div>

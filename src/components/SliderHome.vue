@@ -1,73 +1,59 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-// State
-const currentIndex = ref(0);
-const autoSlideInterval = ref(null);
-
-// Slide data
-const slides = ref([
+// Данные слайдов
+const slides = [
   {
     title: 'РЕМОНТ ОКОН',
     subtitle: 'В КЫРГЫЗСТАНЕ',
     description: 'Мы предлагаем профессиональный ремонт оконных конструкций любого типа с предоставлением официальной гарантии на выполненные работы!',
     buttonText: 'Заказать звонок',
-    image: '/assets/img/window_repair_1.png'
+    image: '/assets/img/window_repair_1.webp'
   },
   {
     title: 'КАЧЕСТВЕННЫЕ МАТЕРИАЛЫ',
     subtitle: 'ГАРАНТИЯ КАЧЕСТВА',
     description: 'Используем только проверенные материалы и комплектующие для ремонта окон с гарантией долговечности!',
     buttonText: 'Узнать больше',
-    image: '/assets/img/window_repair_2.png'
+    image: '/assets/img/window_repair_2.webp'
   },
   {
     title: 'ОПЫТНЫЕ МАСТЕРА',
     subtitle: 'ПРОФЕССИОНАЛЬНЫЙ ПОДХОД',
     description: 'Наши специалисты имеют многолетний опыт в сфере ремонта и обслуживания оконных систем!',
     buttonText: 'Вызвать мастера',
-    image: '/assets/img/window_repair_3.png'
+    image: '/assets/img/window_repair_3.webp'
   },
-  {
-    title: 'ДОСТУПНЫЕ ЦЕНЫ',
-    subtitle: 'ВЫГОДНЫЕ УСЛОВИЯ',
-    description: 'Предлагаем конкурентные цены на все виды работ по ремонту окон с возможностью индивидуальных скидок!',
-    buttonText: 'Узнать стоимость',
-    image: '/assets/img/window_repair_4.png'
-  },
-  {
-    title: 'РЕМОНТ ОКОН',
-    subtitle: 'В КЫРГЫЗСТАНЕ',
-    description: 'Мы предлагаем профессиональный ремонт оконных конструкций любого типа с предоставлением официальной гарантии на выполненные работы!',
-    buttonText: 'Заказать звонок',
-    image: '/assets/img/window_repair_5.png'
-  }
-]);
+];
+
+// State
+const activeIndex = ref(0);
+let autoSlideTimer = null;
 
 // Methods
+const setActiveSlide = (index) => {
+  activeIndex.value = index;
+};
+
 const nextSlide = () => {
-  currentIndex.value = (currentIndex.value + 1) % slides.value.length;
+  activeIndex.value = (activeIndex.value + 1) % slides.length;
 };
 
 const prevSlide = () => {
-  currentIndex.value = (currentIndex.value - 1 + slides.value.length) % slides.value.length;
-};
-
-const goToSlide = (index) => {
-  currentIndex.value = index;
+  activeIndex.value = (activeIndex.value - 1 + slides.length) % slides.length;
 };
 
 const startAutoSlide = () => {
-  autoSlideInterval.value = setInterval(() => {
-    nextSlide();
-  }, 5000); // Change slide every 5 seconds
+  autoSlideTimer = setInterval(nextSlide, 5000);
 };
 
 const stopAutoSlide = () => {
-  clearInterval(autoSlideInterval.value);
+  if (autoSlideTimer) {
+    clearInterval(autoSlideTimer);
+    autoSlideTimer = null;
+  }
 };
 
-// Lifecycle hooks
 onMounted(() => {
   startAutoSlide();
 });
@@ -78,90 +64,102 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="slider-background">
+  <div class="slider" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
     <div class="slider-container">
-      <!-- Left content section -->
+      <!-- Content section with all slides -->
       <div class="content-section">
-        <h1 class="title">{{ slides[currentIndex].title }}</h1>
-        <div class="subtitle">{{ slides[currentIndex].subtitle }}</div>
-        <p class="description">{{ slides[currentIndex].description }}</p>
-        <router-link to="/contact" class="action-button">{{ slides[currentIndex].buttonText }}</router-link>
+        <div
+            v-for="(slide, index) in slides"
+            :key="index"
+            :class="['content-slide', { active: activeIndex === index }]"
+        >
+          <h1 class="title">{{ slide.title }}</h1>
+          <div class="subtitle">{{ slide.subtitle }}</div>
+          <p class="description">{{ slide.description }}</p>
+          <router-link to="/contact" class="action-button">{{ slide.buttonText }}</router-link>
+        </div>
       </div>
 
-      <!-- Right image section -->
+      <!-- Image section with all slides -->
       <div class="image-section">
-        <transition name="fade" mode="out-in">
-          <img
-              :key="currentIndex"
-              :src="slides[currentIndex].image"
-              :alt="slides[currentIndex].title"
-              class="slider-image"
-          >
-        </transition>
+        <div
+            v-for="(slide, index) in slides"
+            :key="index"
+            :class="['image-slide', { active: activeIndex === index }]"
+            :style="{ backgroundImage: `url(${slide.image})` }"
+        ></div>
       </div>
 
       <!-- Navigation controls -->
-      <div class="navigation-area">
-        <!-- Navigation buttons -->
-        <div class="nav-buttons">
-          <button @click="prevSlide" class="nav-button prev">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-          </button>
-          <button @click="nextSlide" class="nav-button next">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"></polyline>
-            </svg>
-          </button>
+      <div class="navigation">
+        <button @click="prevSlide" class="nav-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2"></polyline>
+          </svg>
+        </button>
+
+        <div class="indicators">
+          <button
+              v-for="(_, index) in slides"
+              :key="index"
+              @click="setActiveSlide(index)"
+              :class="['indicator', { active: activeIndex === index }]"
+          ></button>
         </div>
 
-        <!-- Indicators -->
-        <div class="indicators">
-          <div
-              v-for="(slide, index) in slides"
-              :key="index"
-              :class="['indicator', { active: currentIndex === index }]"
-              @click="goToSlide(index)"
-          ></div>
-        </div>
+        <button @click="nextSlide" class="nav-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2"></polyline>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.slider-background {
+.slider {
+  position: relative;
   width: 100%;
-  max-width: 100%;
-  background: url("/assets/background/background_slider.png");
-  background-repeat: no-repeat;
-  background-size: cover;
   height: 800px;
-  max-height: 800px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  overflow: hidden;
 }
 
 .slider-container {
-  display: flex;
   position: relative;
   width: 90%;
   height: 80%;
   max-height: 650px;
-  overflow: hidden;
+  margin: 0 auto;
+  display: flex;
 }
 
+/* Content Section */
 .content-section {
+  position: relative;
   width: 35%;
+  background: white;
+  z-index: 3;
+}
+
+.content-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 2rem;
-  background-color: white;
-  z-index: 2;
-  position: relative;
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.content-slide.active {
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .title {
@@ -177,7 +175,7 @@ onBeforeUnmount(() => {
   font-weight: bold;
   margin-bottom: 1.5rem;
   color: white;
-  background-color: #2a9d8f;
+  background: #2a9d8f;
   padding: 0.5rem 1rem;
   display: inline-block;
   text-align: center;
@@ -185,27 +183,27 @@ onBeforeUnmount(() => {
 
 .description {
   font-size: 1rem;
-  margin-bottom: 2rem;
   line-height: 1.6;
   color: #555;
-  max-width: 90%;
+  margin-bottom: 2rem;
 }
 
 .action-button {
   padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  background-color: white;
+  background: white;
   color: #333;
   border: 1px solid #ddd;
   cursor: pointer;
-  transition: all 0.3s ease;
+  text-decoration: none;
+  transition: background 0.3s ease;
   width: fit-content;
 }
 
 .action-button:hover {
-  background-color: #f0f0f0;
+  background: #f0f0f0;
 }
 
+/* Image Section */
 .image-section {
   position: absolute;
   right: 0;
@@ -215,43 +213,48 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
-.slider-image {
+.image-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-.navigation-area {
+.image-slide.active {
+  opacity: 1;
+}
+
+/* Navigation */
+.navigation {
   position: absolute;
+  bottom: 2rem;
   left: 2rem;
-  bottom: 3rem;
   z-index: 10;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
 }
 
-.nav-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.nav-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.nav-btn {
   width: 2rem;
   height: 2rem;
-  background-color: #ffffff;
-  color: #333;
+  background: white;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
 }
 
-.nav-button:hover {
-  background-color: #2a9d8f;
+.nav-btn:hover {
+  background: #2a9d8f;
   color: white;
 }
 
@@ -263,38 +266,39 @@ onBeforeUnmount(() => {
 .indicator {
   width: 2rem;
   height: 3px;
-  background-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255,255,255,0.5);
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .indicator.active {
-  background-color: #2a9d8f;
+  background: #2a9d8f;
 }
 
-/* Transition effects */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
+  .slider {
+    height: auto;
+  }
+
   .slider-container {
     flex-direction: column;
     height: auto;
-    padding-bottom: 5rem;
   }
 
   .content-section {
-    width: 90%;
-    max-width: 90%;
-    padding: 5%;
+    width: 100%;
+    height: auto;
+  }
+
+  .content-slide {
+    position: relative;
+    transform: none;
+    opacity: 1;
+  }
+
+  .content-slide:not(.active) {
+    display: none;
   }
 
   .image-section {
@@ -303,39 +307,24 @@ onBeforeUnmount(() => {
     height: 300px;
   }
 
-  .navigation-area {
-    position: relative;
-    left: 0;
-    bottom: 0;
+  .navigation {
+    position: static;
     margin-top: 1rem;
-    align-items: center;
-    width: 100%;
+    justify-content: center;
   }
 
-  .action-button{
-    margin: auto;
-  }
-  .description{
-    margin-bottom: 1rem;
-  }
-  .title{
-    font-size: 2rem;
-  }
-}
-
-@media (max-width: 620px) {
-  .slider-container{
-    width: 100%;
+  .action-button {
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 501px) {
-  .title{
+  .title {
     font-size: 1.5rem;
   }
-  .subtitle{
+
+  .subtitle {
     font-size: 1.25rem;
   }
 }
-
 </style>

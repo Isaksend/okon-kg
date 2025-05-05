@@ -12,7 +12,7 @@
               :key="index"
               class="gallery-item"
               @click="openModal(index)">
-            <img :src="project.image" :alt="project.title" class="gallery-image">
+            <img loading="lazy" :src="project.image" :alt="project.title" class="gallery-image">
             <div class="gallery-overlay">
               <span class="gallery-title">{{ project.title }}</span>
             </div>
@@ -26,7 +26,7 @@
           <button class="close-button" @click="closeModal">&times;</button>
 
           <div class="modal-image-container">
-            <img :src="projectGallery[currentModalIndex].image" :alt="projectGallery[currentModalIndex].title" class="modal-image">
+            <img loading="lazy" :src="projectGallery[currentModalIndex].image" :alt="projectGallery[currentModalIndex].title" class="modal-image">
 
             <button v-if="projectGallery.length > 1" class="modal-nav-button prev" @click.stop="prevImage">
               <span>&lt;</span>

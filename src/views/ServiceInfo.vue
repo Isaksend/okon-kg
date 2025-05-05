@@ -125,7 +125,7 @@ onMounted(async () => {
       <h2>Галерея</h2>
       <div class="gallery-grid">
         <div v-for="(image, index) in serviceDetails.gallery" :key="index" class="gallery-item">
-          <img :src="image" :alt="`${serviceTitle} - изображение ${index + 1}`">
+          <img loading="lazy" :src="image" :alt="`${serviceTitle} - изображение ${index + 1}`">
         </div>
       </div>
     </div>

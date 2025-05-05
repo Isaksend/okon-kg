@@ -23,7 +23,7 @@ onMounted(() => {
         <div class="logo">
           <picture>
             <source media="(max-width: 501px)" srcset="/assets/logo/mobile_logo.jpg" />
-            <img src="/assets/logo/logo.png" class="logo" alt="Okon.kg logo" />
+            <img loading="lazy" src="/assets/logo/logo.png" class="logo" alt="Okon.kg logo" />
           </picture>
           <div class="logo-name">
             OKON.KG

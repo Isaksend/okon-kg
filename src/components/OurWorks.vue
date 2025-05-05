@@ -10,7 +10,7 @@
             <div v-for="(work, index) in works"
                  :key="index"
                  class="work-item">
-              <img :src="work.image" :alt="work.title" class="work-image">
+              <img loading="lazy" :src="work.image" :alt="work.title" class="work-image">
             </div>
           </div>
         </div>
@@ -23,8 +23,8 @@
                    :key="index"
                    v-show="currentSlide === index"
                    class="work-item">
-                <img :src="work.image" :alt="work.title" class="work-image">
-                <img :src="work.image" :alt="work.title" class="work-image">
+                <img loading="lazy" :src="work.image" :alt="work.title" class="work-image">
+                <img loading="lazy" :src="work.image" :alt="work.title" class="work-image">
               </div>
             </transition-group>
           </div>
@@ -64,23 +64,23 @@ const visibleItems = ref(3); // Number of items visible in desktop view
 const works = ref([
   {
     title: 'Деревянные окна до и после ремонта',
-    image: '/assets/img/ourworks_item_1.png'
+    image: '/assets/img/ourworks_item_1.webp'
   },
   {
     title: 'Пластиковые окна до и после установки',
-    image: '/assets/img/ourworks_item_2.png'
+    image: '/assets/img/ourworks_item_2.webp'
   },
   {
     title: 'Алюминиевые окна до и после замены',
-    image: '/assets/img/ourworks_item_3.png'
+    image: '/assets/img/ourworks_item_3.webp'
   },
   {
     title: 'Остекление балкона до и после',
-    image: '/assets/img/ourworks_item_4.png'
+    image: '/assets/img/ourworks_item_4.webp'
   },
   {
     title: 'Замена стеклопакета до и после',
-    image: '/assets/img/ourworks_item_5.png'
+    image: '/assets/img/ourworks_item_5.webp'
   }
 ]);
 

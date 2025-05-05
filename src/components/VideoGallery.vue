@@ -10,7 +10,7 @@
           @click="openVideo(index)"
       >
         <div class="video-thumbnail">
-          <img :src="video.thumbnail" :alt="video.title">
+          <img loading="lazy" :src="video.thumbnail" :alt="video.title">
           <div class="play-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path fill="white" d="M8 5v14l11-7z"/>
@@ -95,7 +95,7 @@ const videos = ref([
         'Не портит внешний вид окна.\n' +
         '\n' +
         'Не улетит от порывов ветра.\n',
-    thumbnail: '/assets/img/img_video_1.jpg',
+    thumbnail: '/assets/img/img_video_1.webp',
     url: '/assets/videos/video_1.mp4',
     views: '94.3K',
     posted: '2 недели назад'
@@ -105,7 +105,7 @@ const videos = ref([
     title: 'Как мы делаем внутренние сетки? Загляните в наш цех!',
     description: 'У нас всё по-настоящему!\n' +
         'Внутренние москитные сетки мы изготавливаем в собственном цехе — под точный размер ваших окон.',
-    thumbnail: '/assets/img/img_video_2.jpg',
+    thumbnail: '/assets/img/img_video_2.webp',
     url: '/assets/videos/video_2.mp4',
     views: '3.4K',
     posted: '1 неделю назад'
@@ -114,7 +114,7 @@ const videos = ref([
     id: 3,
     title: 'Обычная сетка и антипыль',
     description: 'Идеальный выбор для города, аллергиков и людей, заботящихся о здоровье.\n',
-    thumbnail: '/assets/img/img_video_3.jpg',
+    thumbnail: '/assets/img/img_video_3.webp',
     url: '/assets/videos/video_3.mp4',
     views: '5.7K',
     posted: '4 дня назад'

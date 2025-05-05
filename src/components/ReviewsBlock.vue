@@ -8,7 +8,7 @@
         <div v-for="(review, index) in visibleReviews" :key="index" class="review-card">
           <div class="review-header">
             <div class="review-avatar-container">
-              <img :src="review.avatar" :alt="review.name" class="review-avatar">
+              <img loading="lazy" :src="review.avatar" :alt="review.name" class="review-avatar">
               <h3 class="review-name">{{ review.name }}</h3>
             </div>
             <div class="review-rating">
@@ -40,7 +40,7 @@
                  class="review-card">
               <div class="review-header">
                 <div class="review-avatar-container">
-                  <img :src="review.avatar" :alt="review.name" class="review-avatar">
+                  <img loading="lazy" :src="review.avatar" :alt="review.name" class="review-avatar">
                   <h3 class="review-name">{{ review.name }}</h3>
                 </div>
                 <div class="review-rating">

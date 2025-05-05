@@ -11,7 +11,7 @@
 
     <div class="repair-contain">
       <!-- repair item 1 -->
-      <div class="repair-item" style="background-image: url('/assets/background/repair_item_1.png');">
+      <div class="repair-item" style="background-image: url('/assets/background/repair_item_1.webp');">
         <div class="repair-item-overlay">
           <div class="repair-item-text">
             Ремонт пластиковых окон
@@ -20,7 +20,7 @@
       </div>
 
       <!-- repair item 2 -->
-      <div class="repair-item" style="background-image: url('/assets/background/repair_item_2.png');">
+      <div class="repair-item" style="background-image: url('/assets/background/repair_item_2.webp');">
         <div class="repair-item-overlay">
           <div class="repair-item-text">
             Ремонт алюминиевых окон

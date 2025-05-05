@@ -7,9 +7,9 @@ const currentYear = ref(new Date().getFullYear());
 
 // Social media links
 const socialLinks = ref([
-  { name: 'Instagram', icon: '/assets/icons/Instagram.png', url: 'https://instagram.com/okon.kg' },
-  { name: 'WhatsApp', icon: '/assets/icons/WhatsApp.png', url: 'https://wa.me/996702299777' },
-  { name: 'Tiktok', icon: '/assets/icons/TikTok.png', url: 'https://t.me/okonkg' }
+  { name: 'Instagram', icon: '/assets/icons/Instagram.png', url: 'https://www.instagram.com/okon.kg/' },
+  { name: 'WhatsApp', icon: '/assets/icons/WhatsApp.png', url: 'https://api.whatsapp.com/send?phone=996500074222' },
+  { name: 'Tiktok', icon: '/assets/icons/TikTok.png', url: 'https://www.tiktok.com/@okonkg' }
 ]);
 
 // Footer menu items removed as per request
@@ -18,7 +18,7 @@ const socialLinks = ref([
 const contactInfo = ref({
   bishkek: {
     address: 'Бишкек, Ибраимова 61',
-    phone: '+996 702 299 777'
+    phone: '+996 500 074 222'
   },
   osh: {
     address: 'Ош, тц Таатан 1 этаж',
@@ -50,7 +50,7 @@ onBeforeUnmount(() => {
         <div class="footer-logo">
           <picture>
             <source media="(max-width: 501px)" srcset="/assets/logo/mobile_logo.jpg" />
-            <img src="/assets/logo/logo.png" class="logo" alt="Okon.kg logo" />
+            <img loading="lazy" src="/assets/logo/logo.png" class="logo" alt="Okon.kg logo" />
           </picture>
           <div class="logo-name">OKON.KG</div>
         </div>
@@ -92,7 +92,7 @@ onBeforeUnmount(() => {
               rel="noopener noreferrer"
               class="social-link"
           >
-            <img :src="social.icon" :alt="social.name" class="social-icon">
+            <img loading="lazy" :src="social.icon" :alt="social.name" class="social-icon">
           </a>
         </div>
       </div>

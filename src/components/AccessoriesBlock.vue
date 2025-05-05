@@ -9,27 +9,27 @@ const currentSlide = ref(0);
 const accessories = ref([
   {
     title: 'Москитные сетки',
-    image: '/assets/img/mosquito_nets.png'
+    image: '/assets/img/mosquito_nets.webp'
   },
   {
     title: 'Замки на окна',
-    image: '/assets/img/window_locks.png'
+    image: '/assets/img/window_locks.webp'
   },
   {
     title: 'Отливы и козырьки',
-    image: '/assets/img/window_sills.png'
+    image: '/assets/img/window_sills.webp'
   },
   {
     title: 'Дверные и оконные петли',
-    image: '/assets/img/door_hinges.png'
+    image: '/assets/img/door_hinges.webp'
   },
   {
     title: 'Оконные откосы',
-    image: '/assets/img/window_slopes.png'
+    image: '/assets/img/window_slopes.webp'
   },
   {
     title: 'Подоконники и накладки',
-    image: '/assets/img/window_sills_covers.png'
+    image: '/assets/img/window_sills_covers.webp'
   }
 ]);
 
@@ -74,7 +74,7 @@ onBeforeUnmount(() => {
       <div class="accessories-grid">
         <div v-for="(accessory, index) in accessories" :key="index" class="accessory-item">
           <div class="accessory-image">
-            <img :src="accessory.image" :alt="accessory.title">
+            <img loading="lazy" :src="accessory.image" :alt="accessory.title">
           </div>
           <div class="accessory-title">{{ accessory.title }}</div>
         </div>
@@ -95,7 +95,7 @@ onBeforeUnmount(() => {
                  v-show="currentSlide === index"
                  class="accessory-slide">
               <div class="accessory-image">
-                <img :src="accessory.image" :alt="accessory.title">
+                <img loading="lazy" :src="accessory.image" :alt="accessory.title">
               </div>
               <div class="accessory-title">
                 <div>{{ accessory.title }}</div>

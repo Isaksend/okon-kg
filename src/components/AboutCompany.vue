@@ -8,20 +8,20 @@ import VideoGallery from "./VideoGallery.vue";
     <div class="company-soc-links">
       <div class="soc-link-list">
         <div class="social-icons">
-          <a href="https://instagram.com/your-account" class="social-link">
-            <img src="/assets/icons/Instagram.svg" alt="Follow us on Instagram" width="40" height="40">
+          <a href="https://www.instagram.com/okon.kg/" class="social-link">
+            <img loading="lazy" src="/assets/icons/Instagram.svg" alt="Follow us on Instagram" width="40" height="40">
           </a>
-          <a href="https://tiktok.com/@your-account" class="social-link">
-            <img src="/assets/icons/TikTok.svg" alt="Follow us on TikTok" width="40" height="40">
+          <a href="https://www.tiktok.com/@okonkg" class="social-link">
+            <img loading="lazy" src="/assets/icons/TikTok.svg" alt="Follow us on TikTok" width="40" height="40">
           </a>
-          <a href="https://wa.me/your-number" class="social-link">
-            <img src="/assets/icons/WhatsApp.svg" alt="Contact us on WhatsApp" width="40" height="40">
+          <a href="https://api.whatsapp.com/send?phone=996500074222" class="social-link">
+            <img loading="lazy" src="/assets/icons/WhatsApp.svg" alt="Contact us on WhatsApp" width="40" height="40">
           </a>
         </div>
       </div>
     </div>
     <div class="company-large-logo">
-      <img class="large-logo" src="/assets/logo/LargeLogo.png" alt="Follow us on Logo" />
+      <img loading="lazy" class="large-logo" src="/assets/logo/LargeLogo.png" alt="Follow us on Logo" />
     </div>
     <VideoGallery/>
     <div class="title-block">

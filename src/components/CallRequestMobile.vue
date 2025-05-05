@@ -82,7 +82,7 @@
               <div class="number-city">
                 Бишкек
               </div>
-              <p class="phone">+996 702 299 777</p>
+              <p class="phone">+996 500 074 222</p>
             </div>
             <div class="number-content-item">
               <div class="number-city">
@@ -92,8 +92,8 @@
             </div>
           </div>
           <div class="socials">
-            <a href="#">Whatsapp</a>
-            <a href="#">Instagram</a>
+            <a href="https://api.whatsapp.com/send?phone=996500074222">Whatsapp</a>
+            <a href="https://www.instagram.com/okon.kg/">Instagram</a>
           </div>
         </div>
       </div>
