@@ -81,14 +81,17 @@ const submitForm = async () => {
       utm: utmParams.value
     }
 
+
+    console.log('Отправляемые данные:', leadData);
     // Отправка данных на сервер
-    const response = await fetch('/api/amocrm/lead', {
+    const response = await fetch('https://backend-okon-kg-production.up.railway.app/api/amocrm/lead', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(leadData)
     })
+    console.log('Статус ответа:', response.status);
 
     const result = await response.json()
 

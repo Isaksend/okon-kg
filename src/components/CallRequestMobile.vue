@@ -215,7 +215,7 @@ const submitForm = async () => {
     }
 
     // Отправка данных на сервер
-    const response = await fetch('/api/amocrm/lead', {
+    const response = await fetch('https://backend-okon-kg-production.up.railway.app/api/amocrm/lead', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

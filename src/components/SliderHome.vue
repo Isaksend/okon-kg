@@ -1,8 +1,12 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-// Данные слайдов
-const slides = [
+// State
+const currentIndex = ref(0);
+const autoSlideInterval = ref(null);
+
+// Slide data
+const slides = ref([
   {
     title: 'РЕМОНТ ОКОН',
     subtitle: 'В КЫРГЫЗСТАНЕ',
@@ -24,36 +28,32 @@ const slides = [
     buttonText: 'Вызвать мастера',
     image: '/assets/img/window_repair_3.webp'
   },
-];
-
-// State
-const activeIndex = ref(0);
-let autoSlideTimer = null;
+]);
 
 // Methods
-const setActiveSlide = (index) => {
-  activeIndex.value = index;
-};
-
 const nextSlide = () => {
-  activeIndex.value = (activeIndex.value + 1) % slides.length;
+  currentIndex.value = (currentIndex.value + 1) % slides.value.length;
 };
 
 const prevSlide = () => {
-  activeIndex.value = (activeIndex.value - 1 + slides.length) % slides.length;
+  currentIndex.value = (currentIndex.value - 1 + slides.value.length) % slides.value.length;
+};
+
+const goToSlide = (index) => {
+  currentIndex.value = index;
 };
 
 const startAutoSlide = () => {
-  autoSlideTimer = setInterval(nextSlide, 5000);
+  autoSlideInterval.value = setInterval(() => {
+    nextSlide();
+  }, 5000); // Change slide every 5 seconds
 };
 
 const stopAutoSlide = () => {
-  if (autoSlideTimer) {
-    clearInterval(autoSlideTimer);
-    autoSlideTimer = null;
-  }
+  clearInterval(autoSlideInterval.value);
 };
 
+// Lifecycle hooks
 onMounted(() => {
   startAutoSlide();
 });
@@ -64,102 +64,91 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="slider" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
+  <div class="slider-background">
     <div class="slider-container">
-      <!-- Content section with all slides -->
+      <!-- Left content section -->
       <div class="content-section">
-        <div
-            v-for="(slide, index) in slides"
-            :key="index"
-            :class="['content-slide', { active: activeIndex === index }]"
-        >
-          <h1 class="title">{{ slide.title }}</h1>
-          <div class="subtitle">{{ slide.subtitle }}</div>
-          <p class="description">{{ slide.description }}</p>
-          <router-link to="/contact" class="action-button">{{ slide.buttonText }}</router-link>
-        </div>
+        <h1 class="title">{{ slides[currentIndex].title }}</h1>
+        <div class="subtitle">{{ slides[currentIndex].subtitle }}</div>
+        <p class="description">{{ slides[currentIndex].description }}</p>
+        <router-link to="/contact" class="action-button">{{ slides[currentIndex].buttonText }}</router-link>
       </div>
 
-      <!-- Image section with all slides -->
+      <!-- Right image section -->
       <div class="image-section">
-        <div
-            v-for="(slide, index) in slides"
-            :key="index"
-            :class="['image-slide', { active: activeIndex === index }]"
-            :style="{ backgroundImage: `url(${slide.image})` }"
-        ></div>
+        <transition name="fade" mode="out-in">
+          <img
+              loading="lazy"
+              :key="currentIndex"
+              :src="slides[currentIndex].image"
+              :alt="slides[currentIndex].title"
+              class="slider-image"
+          >
+        </transition>
       </div>
 
       <!-- Navigation controls -->
-      <div class="navigation">
-        <button @click="prevSlide" class="nav-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <polyline points="15 18 9 12 15 6" fill="none" stroke="currentColor" stroke-width="2"></polyline>
-          </svg>
-        </button>
-
-        <div class="indicators">
-          <button
-              v-for="(_, index) in slides"
-              :key="index"
-              @click="setActiveSlide(index)"
-              :class="['indicator', { active: activeIndex === index }]"
-          ></button>
+      <div class="navigation-area">
+        <!-- Navigation buttons -->
+        <div class="nav-buttons">
+          <button @click="prevSlide" class="nav-button prev">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+          <button @click="nextSlide" class="nav-button next">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
         </div>
 
-        <button @click="nextSlide" class="nav-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24">
-            <polyline points="9 18 15 12 9 6" fill="none" stroke="currentColor" stroke-width="2"></polyline>
-          </svg>
-        </button>
+        <!-- Indicators -->
+        <div class="indicators">
+          <div
+              v-for="(slide, index) in slides"
+              :key="index"
+              :class="['indicator', { active: currentIndex === index }]"
+              @click="goToSlide(index)"
+          ></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.slider {
-  position: relative;
+.slider-background {
   width: 100%;
+  max-width: 100%;
+  background: url("/assets/background/background_slider.png");
+  background-repeat: no-repeat;
+  background-size: cover;
   height: 800px;
-  overflow: hidden;
+  max-height: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .slider-container {
+  display: flex;
   position: relative;
   width: 90%;
   height: 80%;
   max-height: 650px;
-  margin: 0 auto;
-  display: flex;
+  overflow: hidden;
 }
 
-/* Content Section */
 .content-section {
-  position: relative;
   width: 35%;
-  background: white;
-  z-index: 3;
-}
-
-.content-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  opacity: 0;
-  transform: translateX(-100%);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-.content-slide.active {
-  opacity: 1;
-  transform: translateX(0);
+  padding: 2rem;
+  background-color: white;
+  z-index: 2;
+  position: relative;
 }
 
 .title {
@@ -175,7 +164,7 @@ onBeforeUnmount(() => {
   font-weight: bold;
   margin-bottom: 1.5rem;
   color: white;
-  background: #2a9d8f;
+  background-color: #2a9d8f;
   padding: 0.5rem 1rem;
   display: inline-block;
   text-align: center;
@@ -183,27 +172,27 @@ onBeforeUnmount(() => {
 
 .description {
   font-size: 1rem;
+  margin-bottom: 2rem;
   line-height: 1.6;
   color: #555;
-  margin-bottom: 2rem;
+  max-width: 90%;
 }
 
 .action-button {
   padding: 0.75rem 1.5rem;
-  background: white;
+  font-size: 1rem;
+  background-color: white;
   color: #333;
   border: 1px solid #ddd;
   cursor: pointer;
-  text-decoration: none;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
   width: fit-content;
 }
 
 .action-button:hover {
-  background: #f0f0f0;
+  background-color: #f0f0f0;
 }
 
-/* Image Section */
 .image-section {
   position: absolute;
   right: 0;
@@ -213,48 +202,43 @@ onBeforeUnmount(() => {
   z-index: 1;
 }
 
-.image-slide {
-  position: absolute;
-  top: 0;
-  left: 0;
+.slider-image {
   width: 100%;
   height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  object-fit: cover;
 }
 
-.image-slide.active {
-  opacity: 1;
-}
-
-/* Navigation */
-.navigation {
+.navigation-area {
   position: absolute;
-  bottom: 2rem;
   left: 2rem;
+  bottom: 3rem;
   z-index: 10;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 1rem;
 }
 
-.nav-btn {
-  width: 2rem;
-  height: 2rem;
-  background: white;
-  border: none;
-  cursor: pointer;
+.nav-buttons {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s ease;
+  gap: 0.5rem;
 }
 
-.nav-btn:hover {
-  background: #2a9d8f;
+.nav-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #2a9d8f;
   color: white;
 }
 
@@ -266,39 +250,38 @@ onBeforeUnmount(() => {
 .indicator {
   width: 2rem;
   height: 3px;
-  background: rgba(255,255,255,0.5);
-  border: none;
+  background-color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .indicator.active {
-  background: #2a9d8f;
+  background-color: #2a9d8f;
 }
 
-@media (max-width: 768px) {
-  .slider {
-    height: auto;
-  }
+/* Transition effects */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
 
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
   .slider-container {
     flex-direction: column;
     height: auto;
+    padding-bottom: 5rem;
   }
 
   .content-section {
-    width: 100%;
-    height: auto;
-  }
-
-  .content-slide {
-    position: relative;
-    transform: none;
-    opacity: 1;
-  }
-
-  .content-slide:not(.active) {
-    display: none;
+    width: 90%;
+    max-width: 90%;
+    padding: 5%;
   }
 
   .image-section {
@@ -307,23 +290,37 @@ onBeforeUnmount(() => {
     height: 300px;
   }
 
-  .navigation {
-    position: static;
+  .navigation-area {
+    position: relative;
+    left: 0;
+    bottom: 0;
     margin-top: 1rem;
-    justify-content: center;
+    align-items: center;
+    width: 100%;
   }
 
-  .action-button {
-    margin: 0 auto;
+  .action-button{
+    margin: auto;
+  }
+  .description{
+    margin-bottom: 1rem;
+  }
+  .title{
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 620px) {
+  .slider-container{
+    width: 100%;
   }
 }
 
 @media (max-width: 501px) {
-  .title {
+  .title{
     font-size: 1.5rem;
   }
-
-  .subtitle {
+  .subtitle{
     font-size: 1.25rem;
   }
 }
